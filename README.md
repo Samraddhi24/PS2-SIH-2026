@@ -8,7 +8,8 @@
 
 [![SIH 2026](https://img.shields.io/badge/SIH-2026-orange.svg?style=for-the-badge&logo=target)](https://sih.gov.in)
 [![MoES / NCPOR](https://img.shields.io/badge/MoES-NCPOR-0052cc.svg?style=for-the-badge&logo=globe)](https://ncpor.res.in)
-[![Demo](https://img.shields.io/badge/Live-Demo_Ready-brightgreen.svg?style=for-the-badge&logo=google-chrome)](https://github.com)
+[![Demo](https://img.shields.io/badge/Live-Demo_Ready-brightgreen.svg?style=for-the-badge&logo=google-chrome)](https://samraddhi24.github.io/PS2-SIH-2026/)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-PS2--SIH--2026-blue.svg?style=for-the-badge&logo=github)](https://github.com/Samraddhi24/PS2-SIH-2026)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 </div>
@@ -204,7 +205,7 @@ npx -y serve .
 4. Under **Build and deployment**, set **Source** to `Deploy from a branch`.
 5. Select branch `main` and directory `/ (root)`, then click **Save**.
 6. Within 60 seconds, your live demo is operational at:
-   `https://<your-github-username>.github.io/polar-ops/`
+   `https://samraddhi24.github.io/PS2-SIH-2026/`
 
 ---
 
