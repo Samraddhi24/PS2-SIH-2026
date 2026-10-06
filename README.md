@@ -4,7 +4,7 @@
 
 **Smart India Hackathon 2026 &middot; Problem Statement ID: 26062**  
 **Organization:** Ministry of Earth Sciences (MoES) / National Centre for Polar and Ocean Research (NCPOR)  
-**Team Name:** Mind Mates &middot; **Category:** Software / Logistics & Remote Mission Operations
+**Team Name:** Mind Mates ; **Category:** Software / Logistics & Remote Mission Operations
 
 [![SIH 2026](https://img.shields.io/badge/SIH-2026-orange.svg?style=for-the-badge&logo=target)](https://sih.gov.in)
 [![MoES / NCPOR](https://img.shields.io/badge/MoES-NCPOR-0052cc.svg?style=for-the-badge&logo=globe)](https://ncpor.res.in)
@@ -43,14 +43,14 @@ POLAR-OPS unites central mission command with isolated field operatives through 
 
 ## 👥 Team Information — Team Mind Mates
 
-| Member Name | Hackathon Role | Primary Domain / Focus Area |
-| :--- | :--- | :--- |
-| **Arjun Mehta** | Team Lead & Full-Stack Architect | Offline Sync Protocol, State Architecture & Algorithmic Engines |
-| **Dr. Vikram Menon** | Systems Analyst & Domain Lead | Emergency SOS Protocol, Medical Logistics & Safety Standards |
-| **Sneha Iyer** | Frontend & UI/UX Engineer | Polar-Night Design System, Tactile & Glove-Friendly Accessibility |
-| **Rohan Kulkarni** | Logistics & Quality Assurance | Cargo Manifest Engine, QR Barcode Standard & Stock Auditing |
-| **Priya Nair** | Documentation & Data Engineer | Cartographic SVG Graticules & Mission Readiness Formula Tuning |
-| **Aditya Joshi** | DevOps & Deployment Specialist | Progressive Web App (PWA) Standards, Cross-Browser Compatibility |
+| Member Name |
+| :--- |
+| **Abhi Dutta** | 
+| **Samraddhi Agrawal** | 
+| **Jemuel Francis** | 
+| **Shweta Mishra** | 
+| **Dhanshri Verma** | 
+| **Shayan Roy** | DevOps & Deployment Specialist | Progressive Web App (PWA) Standards, Cross-Browser Compatibility |
 
 ---
 
