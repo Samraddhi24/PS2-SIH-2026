@@ -50,8 +50,7 @@ POLAR-OPS unites central mission command with isolated field operatives through 
 | **Jemuel Francis** | 
 | **Shweta Mishra** | 
 | **Dhanshri Verma** | 
-| **Shayan Roy** | DevOps & Deployment Specialist | Progressive Web App (PWA) Standards, Cross-Browser Compatibility |
-
+| **Shayan Roy** | 
 ---
 
 ## 🚀 Key Features
