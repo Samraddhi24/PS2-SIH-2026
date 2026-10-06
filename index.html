@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>POLAR-OPS &middot; Integrated Polar Expedition Command Centre</title>
+  <meta name="description" content="Offline-first expedition command centre, QR cargo tracking, camp inventory, personnel movement, and Mission Readiness Score for Antarctic & Polar Operations.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Top Navigation & Judge Tour Strip -->
+  <header class="top">
+    <div class="top-row">
+      <div class="brand">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--signal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+          <polyline points="2 17 12 22 22 17"></polyline>
+          <polyline points="2 12 12 17 22 12"></polyline>
+        </svg>
+        <strong>POLAR-OPS</strong>
+        <span>Integrated Polar Expedition Command Centre &middot; SIH 2026 &middot; PS 26062 &middot; MoES / NCPOR</span>
+      </div>
+      <div class="top-actions">
+        <label style="flex-direction:row;align-items:center;gap:6px">Acting as:
+          <select id="acting" aria-label="Acting Role">
+            <option value="manager">Dr. Anjali Rao (Expedition Leader)</option>
+            <option value="responder">Dr. Vikram Menon (Medical Officer)</option>
+          </select>
+        </label>
+        <button class="btn small" id="mute" type="button">Alarm on</button>
+        <button class="btn small" id="reset" type="button">Reset demo</button>
+      </div>
+    </div>
+    <div class="tour">
+      <b>Try it:</b>
+      <ol id="tour-steps"></ol>
+    </div>
+    <div class="switch">
+      <button class="on" data-show="show-both" type="button">Split view</button>
+      <button data-show="show-dash" type="button">Command Dashboard</button>
+      <button data-show="show-field" type="button">Field Device</button>
+    </div>
+  </header>
+
+  <!-- Main Stage: Dual View Layout -->
+  <main class="stage" id="stage">
+    
+    <!-- Left Column: Command Dashboard -->
+    <section class="dash" aria-label="Command Dashboard">
+      
+      <!-- SOS Alert Banner (Audio + Visual) -->
+      <div id="sos-banner" class="sos-banner" hidden></div>
+
+      <!-- High-Level Key Performance Indicators -->
+      <div class="kpis" id="kpis"></div>
+
+      <!-- Navigation Tabs -->
+      <nav class="tabs" aria-label="Dashboard Navigation">
+        <button class="on" data-tab="command" type="button">Command Centre</button>
+        <button data-tab="cargo" data-mgr type="button">Cargo &amp; QR</button>
+        <button data-tab="stock" data-mgr type="button">Stock &amp; Thresholds</button>
+        <button data-tab="people" type="button">Personnel &amp; Comms</button>
+        <button data-tab="plan" data-mgr type="button">Expedition Plan</button>
+      </nav>
+
+      <!-- View 1: Command Centre -->
+      <div class="view on" id="v-command">
+        <div class="cmd-grid">
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Live Operational Polar Map</h2>
+              <div class="seg" id="map-focus">
+                <button class="on" data-f="route" type="button">Expedition route</button>
+                <button data-f="all" type="button">All stations &amp; camps</button>
+              </div>
+            </div>
+            <div id="map" class="map"></div>
+            <div class="legend">
+              <span><i class="lg" style="background:var(--signal)"></i>Permanent station</span>
+              <span><i class="lg" style="background:var(--ice)"></i>Field camp / ship</span>
+              <span><i class="lg" style="background:var(--transit)"></i>Personnel</span>
+              <span><i class="lg" style="background:var(--warn)"></i>Overdue check-in</span>
+              <span><i class="lg" style="background:var(--sos)"></i>Emergency SOS</span>
+            </div>
+          </div>
+
+          <div class="side">
+            <div class="panel" id="readiness"></div>
+            <div class="panel">
+              <div class="panel-head">
+                <h2>Active Operational Alerts</h2>
+                <span class="count" id="alert-count"></span>
+              </div>
+              <ul class="alerts" id="alerts"></ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="lower">
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Station &amp; Camp Status</h2>
+            </div>
+            <div class="camps" id="camp-cards"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Expedition Activity Log</h2>
+            </div>
+            <ul class="activity" id="activity"></ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- View 2: Cargo & QR -->
+      <div class="view" id="v-cargo">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Register Expedition Cargo</h2>
+          </div>
+          <form id="cargo-form" class="form-row">
+            <label>Item description
+              <input name="name" required placeholder="e.g. Jet A1 fuel drum">
+            </label>
+            <label>Category
+              <select name="category" required>
+                <option value="Fuel">Fuel</option>
+                <option value="Food">Food</option>
+                <option value="Medical">Medical</option>
+                <option value="Scientific">Scientific</option>
+                <option value="Spares">Spares</option>
+                <option value="Safety">Safety</option>
+              </select>
+            </label>
+            <label class="n">Quantity
+              <input type="number" name="quantity" value="1" min="1" step="any" required>
+            </label>
+            <label class="n">Unit
+              <input name="unit" value="units" placeholder="L, packs, kits">
+            </label>
+            <label>Current camp
+              <select name="camp_id" class="camp-sel"></select>
+            </label>
+            <label>Destination
+              <select name="dest_id" class="camp-sel"></select>
+            </label>
+            <label class="n">Batches
+              <input type="number" name="count" value="1" min="1" max="50">
+            </label>
+            <button type="submit" class="btn primary">Register &amp; Generate QR</button>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Cargo Manifest &amp; Tracking</h2>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <div class="seg" id="cargo-filter">
+                <button class="on" data-f="all" type="button">All</button>
+                <button data-f="Registered" type="button">Registered</button>
+                <button data-f="In Transit" type="button">In Transit</button>
+                <button data-f="Delivered" type="button">Delivered</button>
+                <button data-f="Delayed" type="button">Delayed</button>
+                <button data-f="Missing" type="button">Missing</button>
+              </div>
+              <button class="btn small" id="print" type="button">Print labels</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table id="cargo-table"></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- View 3: Stock & Thresholds -->
+      <div class="view" id="v-stock">
+        <div class="stock-grid" id="stock-grid"></div>
+      </div>
+
+      <!-- View 4: Personnel & Comms -->
+      <div class="view" id="v-people">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Add Personnel to Expedition</h2>
+          </div>
+          <form id="person-form" class="form-row">
+            <label>Full name
+              <input name="name" required placeholder="e.g. Dr. Rajesh Sharma">
+            </label>
+            <label>Role
+              <select name="role">
+                <option value="field">Field crew</option>
+                <option value="manager">Expedition manager</option>
+                <option value="responder">Medical / safety responder</option>
+              </select>
+            </label>
+            <label>Team
+              <input name="team" placeholder="e.g. Glaciology, Logistics">
+            </label>
+            <label>Designation
+              <input name="designation" placeholder="e.g. Geologist, Field Assistant">
+            </label>
+            <label>Assigned Camp
+              <select name="camp_id" id="person-camp" class="camp-sel"></select>
+            </label>
+            <button type="submit" class="btn primary">Add crew member</button>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Expedition Roster &amp; Live Tracking</h2>
+          </div>
+          <div class="table-wrap">
+            <table id="people-table"></table>
+          </div>
+        </div>
+
+        <div class="lower">
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Field Tablet Comms Status</h2>
+            </div>
+            <div class="table-wrap">
+              <table id="device-table"></table>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Emergency SOS Log</h2>
+            </div>
+            <div class="table-wrap">
+              <table id="sos-table"></table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- View 5: Expedition Plan -->
+      <div class="view" id="v-plan">
+        <div class="plan-grid">
+          <div class="panel" style="position:relative">
+            <div class="panel-head">
+              <h2>Interactive Route Planner</h2>
+              <span class="hint">Click anywhere on the map to add a waypoint/camp</span>
+            </div>
+            <div id="plan-map" class="map plan"></div>
+            <div id="camp-pop" class="camp-pop" hidden>
+              <div style="font-size:12px;color:var(--frost)">Add Camp at <b id="pop-coord"></b></div>
+              <form id="pop-form" style="display:flex;flex-direction:column;gap:6px">
+                <input id="pop-name" required placeholder="Camp name">
+                <select id="pop-type">
+                  <option value="Field Camp">Field Camp</option>
+                  <option value="Fuel Depot">Fuel Depot</option>
+                  <option value="Emergency Shelter">Emergency Shelter</option>
+                </select>
+                <div style="display:flex;gap:6px;justify-content:flex-end">
+                  <button type="button" id="pop-cancel" class="btn small ghost">Cancel</button>
+                  <button type="submit" class="btn small primary">Add</button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Expedition Waypoints</h2>
+              <button id="save-route" class="btn small primary" type="button">Save route</button>
+            </div>
+            <ul id="route-list" class="route-list"></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Column: Simulated Field App (Phone Frame) -->
+    <aside class="phone-col" aria-label="Field Device Simulator">
+      <div class="phone-cap">SIMULATED CREW RUGGED TABLET (OFFLINE CAPABLE)</div>
+      <div class="phone">
+        <div class="screen-wrap">
+          <header id="netbar" class="netbar" hidden>
+            <button id="net-state" class="net-state" type="button">
+              <i></i><span id="net-label">Online</span>
+            </button>
+            <span id="pending" class="pending">All synced</span>
+            <button id="sig" class="sig-btn" type="button">Lose signal</button>
+          </header>
+          <div id="fbody" class="fbody"></div>
+          <div id="ftoast" class="ftoast" hidden></div>
+        </div>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- Printable QR Label Sheet for Thermal Printers -->
+  <div id="print-sheet"></div>
+
+  <!-- Command Toast Container -->
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+
+  <!-- Application Logic & Vendor Scripts -->
+  <script src="qrcode-generator.js"></script>
+  <script src="polar-ops.js"></script>
+</body>
+</html>
